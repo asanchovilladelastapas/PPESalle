@@ -23,11 +23,14 @@ import android.widget.ToggleButton;
 
 public class Salles extends ActionBarActivity implements Runnable{
 
+	//URL du script PHP
     private String URL = "http://www.anthony-sanchez.com/projets/android/salles.php";
+    
     private InputStream is = null;
     
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_salles);
 		
@@ -45,6 +48,7 @@ public class Salles extends ActionBarActivity implements Runnable{
 		//nomSalle1 = (TextView) findViewById(R.id.nomSalle);
 		//nomSalle.setText("Majorelle");
 		
+	//Lancement de la requete http sur un nouveau thread
 	(new Thread(new Salles())).start();	
 }
 
@@ -79,20 +83,21 @@ public class Salles extends ActionBarActivity implements Runnable{
 	    }
 	}
 
-
-
-@Override	
+	//Thread pour éxecution requete httppost
+	@Override	
 	public void run() {
-
 		try
 		{
+			//Requete http
 		   	HttpClient httpclient = new DefaultHttpClient();
 		   	HttpPost httppost = new HttpPost(URL);
 		    HttpResponse response = httpclient.execute(httppost);
 		    HttpEntity entity = response.getEntity();     
 		    
+		    //Récupère le flux retourné par le script PHP
 		    is = entity.getContent();
 
+		    //Crée un String avec le resultat récupéré
 		    InputStreamReader input = new InputStreamReader(is,"iso-8859-1");
 	        BufferedReader reader = new BufferedReader(input);
 	        StringBuilder sb = new StringBuilder();
@@ -104,13 +109,15 @@ public class Salles extends ActionBarActivity implements Runnable{
 	        }
 	        
 	        is.close();
+	        
 	        String result=sb.toString();
 	        
+	        //Parse les données JSON
 	        JSONArray jArray = new JSONArray(result);
 
 	        for(int i=0;i<jArray.length();i++)
 	        {
-	            // Résultats de la requête
+	            // Pour chaque salle, doit créer un Textview affichant son nom
 	        	TextView nomSalle = new TextView(this);
 
 	    		nomSalle = (TextView) findViewById(R.id.nomSalle+i);
@@ -120,7 +127,7 @@ public class Salles extends ActionBarActivity implements Runnable{
 
 			catch(Exception e)
 		    {
-		        Log.e("log_tag", "Error in http connection " + e.toString());
+		        Log.e("log_tag", e.toString());
 		    }
 		}
-}
+	}

@@ -1,17 +1,23 @@
 package com.example.disposalles;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class Salles extends ActionBarActivity{
     Button boutonSalles;
     private String URL = "http://www.anthony-sanchez.com/projets/android/salles.php";
+    public static String reponse = "";
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -19,7 +25,7 @@ public class Salles extends ActionBarActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_salles);
 		
-		//Lors du clic recupère les salles
+		//Lors du clic recupère les salles (appuer deux fois)
 		boutonSalles = (Button) findViewById(R.id.boutonSalles);
 		
 		this.boutonSalles.setOnClickListener(new OnClickListener()
@@ -30,6 +36,9 @@ public class Salles extends ActionBarActivity{
 				//Execute les requetes sur un nouveau thread
 				ThreadRequete t = new ThreadRequete();
 				t.execute(URL);
+				//Affichage resultat pour vérif
+				System.out.println(reponse);		
+				JSONParse(reponse);
 			}
 		});
 				
@@ -65,6 +74,30 @@ public class Salles extends ActionBarActivity{
 	    } else {
 	        // Disable
 	    }
+	}
+
+	public void JSONParse(String laRep)
+	{
+		try
+		{
+			JSONArray jArray = new JSONArray(laRep);
+			
+			for (int i = 0; i < jArray.length(); i++) 
+			{
+				
+			//TextView nomSalle = new TextView(this);
+				
+			//Vérifie qu'on rentre bien dans la boucle
+			System.out.println("iteration"+i);
+			
+			//nomSalle = (TextView) findViewById(R.id.nomSalle+i);
+			//nomSalle.setText(jArray.optString(i, "name"));
+			}
+		}
+		catch (JSONException e)
+		{
+            Log.e("log_tag", e.toString());
+		}
 	}
 
 }

@@ -11,13 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class Salles extends ActionBarActivity{
     Button boutonSalles;
     private String URL = "http://www.anthony-sanchez.com/projets/android/salles.php";
-    public static String reponse = "";
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -37,8 +37,8 @@ public class Salles extends ActionBarActivity{
 				ThreadRequete t = new ThreadRequete();
 				t.execute(URL);
 				//Affichage resultat pour vérif
-				System.out.println(reponse);		
-				JSONParse(reponse);
+				System.out.println(ThreadRequete.reponse);		
+				JSONParse(ThreadRequete.reponse);
 			}
 		});
 				
@@ -81,16 +81,30 @@ public class Salles extends ActionBarActivity{
 		try
 		{
 			JSONArray jArray = new JSONArray(laRep);
-			
+			//layout pour stocker les textView dynamiques
+			LinearLayout ll = (LinearLayout) findViewById(R.id.linlay); 
+
 			for (int i = 0; i < jArray.length(); i++) 
 			{
 				
-			//TextView nomSalle = new TextView(this);
-				
+			//Création d'un TextView pour chaque salle
+			 TextView textView1 = new TextView(this); // Création d'un TextView
+             textView1.setText(jArray.optString(i, "nom"));
+             textView1.setTextSize(15); //taille du texte
+             textView1.setTextColor(0xF0000FFF); //couleur bleue du texte
+             ll.addView(textView1); // Attache le TextView au layout parent
+             
+             //Création d'un togglebutton pour chaque salle
+             ToggleButton toggle = new ToggleButton(this);
+             toggle.setText("Actif");
+             toggle.setTextOn("Salle occupée");
+             toggle.setTextOff("Salle libre");
+             ll.addView(toggle); // Attache le Toggle au layout parent
+
+             
 			//Vérifie qu'on rentre bien dans la boucle
-			System.out.println("iteration"+i);
+			//System.out.println("iteration"+i);
 			
-			//nomSalle = (TextView) findViewById(R.id.nomSalle+i);
 			//nomSalle.setText(jArray.optString(i, "name"));
 			}
 		}

@@ -21,6 +21,7 @@ import android.util.Log;
 public class ThreadRequete extends AsyncTask <String, String, Void>
 {
 	String ligne;
+    public static String reponse="";
 
 	protected Void doInBackground(String... params)
 	{
@@ -35,7 +36,7 @@ public class ThreadRequete extends AsyncTask <String, String, Void>
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			while ((ligne = reader.readLine()) != null) 
 			{
-				Salles.reponse = ligne.trim()+"\n";
+				reponse = ligne.trim()+"\n";
 			}
 		}
 		catch(Exception e)

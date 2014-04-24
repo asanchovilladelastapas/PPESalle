@@ -1,44 +1,77 @@
 package com.example.disposalles;
 
+import java.lang.reflect.Array;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.R.array;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class Salles extends ActionBarActivity{
+public class Salles extends ActionBarActivity implements CompoundButton.OnCheckedChangeListener{
     Button boutonSalles;
-    private String URL = "http://www.anthony-sanchez.com/projets/android/salles.php";
-    
+    public static String URL = "http://www.anthony-sanchez.com/projets/android/salles.php";
+    String nom = "";
+    String identifiant = "";
+    String statut = "";
+    OnCheckedChangeListener toggleListener;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_salles);
+
+	    TableLayout tl = (TableLayout) findViewById(R.id.relay);
+
+	    TableRow buttonRow = new TableRow(this);
+	    
+		//Lors du clic recupère les salles
+		boutonSalles = new Button(this);
+		boutonSalles.setText("Récupérer les salles");
+		boutonSalles.setVisibility(View.VISIBLE);
 		
-		//Lors du clic recupère les salles (appuer deux fois)
-		boutonSalles = (Button) findViewById(R.id.boutonSalles);
+		
+		buttonRow.addView(boutonSalles);
+		buttonRow.setGravity(Gravity.CENTER_HORIZONTAL);
+		
+		TableLayout buttonTableLayout = new TableLayout(this);
+  	    buttonTableLayout.addView(buttonRow);
+		
+		tl.addView(buttonTableLayout);
+		
+		//Execute les requetes sur un nouveau thread
+		ConnexionAsyncTask c = new ConnexionAsyncTask();
+		c.execute();
 		
 		this.boutonSalles.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				//Execute les requetes sur un nouveau thread
-				ThreadRequete t = new ThreadRequete();
-				t.execute(URL);
 				//Affichage resultat pour vérif
-				System.out.println(ThreadRequete.reponse);		
-				JSONParse(ThreadRequete.reponse);
+				System.out.println(ConnexionAsyncTask.reponse);		
+				JSONParse(ConnexionAsyncTask.reponse);
+				boutonSalles.setVisibility(View.GONE);
 			}
 		});
 				
@@ -65,53 +98,95 @@ public class Salles extends ActionBarActivity{
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void onToggleClicked(View view) {
-	    // Is the toggle on?
-	    boolean on = ((ToggleButton) view).isChecked();
-	    
-	    if (on) {
-	        // Enable
-	    } else {
-	        // Disable
-	    }
-	}
-
 	public void JSONParse(String laRep)
 	{
 		try
 		{
 			JSONArray jArray = new JSONArray(laRep);
 			//layout pour stocker les textView dynamiques
-			LinearLayout ll = (LinearLayout) findViewById(R.id.linlay); 
+		    TableLayout ll = (TableLayout) findViewById(R.id.relay);
 
 			for (int i = 0; i < jArray.length(); i++) 
-			{
-				
+			{	
+				// special rows
+			    TableRow contentRow = new TableRow(this);
+			    
+			    // margins
+			    contentRow.setPadding(0,0,0,0);
+
+			//viewToLayout.setLayoutParams(p);
 			//Création d'un TextView pour chaque salle
 			 TextView textView1 = new TextView(this); // Création d'un TextView
-             textView1.setText(jArray.optString(i, "nom"));
-             textView1.setTextSize(15); //taille du texte
-             textView1.setTextColor(0xF0000FFF); //couleur bleue du texte
-             ll.addView(textView1); // Attache le TextView au layout parent
+
+			 JSONObject json_obj = jArray.getJSONObject(i);   //get the 3rd item
+			 nom = json_obj.getString("nom");
+			 identifiant = json_obj.getString("id");
+			 statut = json_obj.getString("statut");
+			 
+			 textView1.setGravity(Gravity.LEFT);
+			 textView1.setId(i+1);
+			 textView1.setText(nom);
+             textView1.setTextSize(17); //taille du texte
+             textView1.setPadding(10, 3, 80, 3);
+             int idText = textView1.getId();
+
+             contentRow.addView(textView1); // Attache le TextView au layout parent
              
+             
+          // the title tablelayout
              //Création d'un togglebutton pour chaque salle
              ToggleButton toggle = new ToggleButton(this);
-             toggle.setText("Actif");
-             toggle.setTextOn("Salle occupée");
-             toggle.setTextOff("Salle libre");
-             ll.addView(toggle); // Attache le Toggle au layout parent
-
+             toggle.setMinimumWidth(0);
+             toggle.setWidth(150);
+             toggle.setHeight(90);
              
-			//Vérifie qu'on rentre bien dans la boucle
-			//System.out.println("iteration"+i);
-			
-			//nomSalle.setText(jArray.optString(i, "name"));
-			}
+             if(statut.equals("0"))
+             {
+            	 toggle.setText("Libre");
+             }
+             else
+             {
+            	 toggle.setChecked(true);
+            	 toggle.setText("Occupée");
+             }
+             toggle.setTextOn("Occupée");
+             toggle.setTextOff("Libre");
+             toggle.setId(i+1);
+             toggle.setOnCheckedChangeListener(this);   
+             
+             //Left, top, right, bottom
+
+     	    contentRow.setPadding(10,10,10,10);
+
+     	    contentRow.addView(toggle);
+     	    contentRow.setGravity(Gravity.RIGHT);
+     	    
+     	   TableLayout contentTableLayout = new TableLayout(this);
+     	   contentTableLayout.addView(contentRow);
+
+     	    ll.addView(contentTableLayout);
 		}
+	}
 		catch (JSONException e)
 		{
-            Log.e("log_tag", e.toString());
+            Log.e("Erreur JSON", e.toString());
 		}
 	}
 
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+	{
+	    Toast.makeText(this, "Boutton n°" + buttonView.getId() + " " + isChecked, Toast.LENGTH_SHORT).show();
+		
+	    if (isChecked)
+		{
+	        RequeteSQL r = new RequeteSQL();
+	        r.execute(buttonView.getId(), 1);
+        }
+		else
+		{
+			RequeteSQL r = new RequeteSQL();
+	        r.execute(buttonView.getId(), 0);
+        }			
+	}
 }

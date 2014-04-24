@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ThreadRequete extends AsyncTask <String, String, Void>
+public class ConnexionAsyncTask extends AsyncTask <String, String, Void>
 {
 	String ligne;
     public static String reponse="";
@@ -27,7 +27,7 @@ public class ThreadRequete extends AsyncTask <String, String, Void>
 	{
 		try
 		{
-			URL url = new URL(params[0]);
+			URL url = new URL(Salles.URL);
 			URLConnection  conn = (HttpURLConnection) url.openConnection();
 			
 			conn.setDoOutput(true);

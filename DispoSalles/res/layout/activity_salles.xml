@@ -2,20 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" android:layout_height="fill_parent">
     
-	<LinearLayout
-	android:id ="@+id/linlay"
-  	android:layout_width="fill_parent"
+	<TableLayout
+	android:id ="@+id/relay"
+	android:layout_centerInParent="true"
+  	android:layout_width="wrap_content"
   	android:layout_height="fill_parent" 
   	android:orientation="vertical">
-    
-		<Button
-	    android:id="@+id/boutonSalles"
-	    android:text="Recup salles"
-	    android:layout_width="fill_parent"
-  		android:layout_height="fill_parent" 
-  		android:orientation="vertical"/>
   
-    
-    
-</LinearLayout>
+</TableLayout>
+
 </ScrollView>

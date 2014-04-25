@@ -108,64 +108,63 @@ public class Salles extends ActionBarActivity implements CompoundButton.OnChecke
 
 			for (int i = 0; i < jArray.length(); i++) 
 			{	
-				// special rows
+
 			    TableRow contentRow = new TableRow(this);
 			    
-			    // margins
+			    // margin
 			    contentRow.setPadding(0,0,0,0);
 
-			//viewToLayout.setLayoutParams(p);
-			//Création d'un TextView pour chaque salle
-			 TextView textView1 = new TextView(this); // Création d'un TextView
-
-			 JSONObject json_obj = jArray.getJSONObject(i);   //get the 3rd item
-			 nom = json_obj.getString("nom");
-			 identifiant = json_obj.getString("id");
-			 statut = json_obj.getString("statut");
-			 
-			 textView1.setGravity(Gravity.LEFT);
-			 textView1.setId(i+1);
-			 textView1.setText(nom);
-             textView1.setTextSize(17); //taille du texte
-             textView1.setPadding(10, 3, 80, 3);
-             int idText = textView1.getId();
-
-             contentRow.addView(textView1); // Attache le TextView au layout parent
-             
-             
-          // the title tablelayout
-             //Création d'un togglebutton pour chaque salle
-             ToggleButton toggle = new ToggleButton(this);
-             toggle.setMinimumWidth(0);
-             toggle.setWidth(150);
-             toggle.setHeight(90);
-             
-             if(statut.equals("0"))
-             {
-            	 toggle.setText("Libre");
-             }
-             else
-             {
-            	 toggle.setChecked(true);
-            	 toggle.setText("Occupée");
-             }
-             toggle.setTextOn("Occupée");
-             toggle.setTextOff("Libre");
-             toggle.setId(i+1);
-             toggle.setOnCheckedChangeListener(this);   
-             
-             //Left, top, right, bottom
-
-     	    contentRow.setPadding(10,10,10,10);
-
-     	    contentRow.addView(toggle);
-     	    contentRow.setGravity(Gravity.RIGHT);
-     	    
-     	   TableLayout contentTableLayout = new TableLayout(this);
-     	   contentTableLayout.addView(contentRow);
-
-     	    ll.addView(contentTableLayout);
-		}
+				//Création d'un TextView pour chaque salle
+				 TextView textView1 = new TextView(this);
+	
+				 JSONObject json_obj = jArray.getJSONObject(i);
+				 nom = json_obj.getString("nom");
+				 identifiant = json_obj.getString("id");
+				 statut = json_obj.getString("statut");
+				 
+				 textView1.setGravity(Gravity.LEFT);
+				 textView1.setId(i+1);
+				 textView1.setText(nom);
+	             textView1.setTextSize(17); //taille du texte
+	             textView1.setPadding(10, 3, 80, 3);
+	             int idText = textView1.getId();
+	
+	             contentRow.addView(textView1); // Attache le TextView au layout parent
+	             
+	             
+	          // the title tablelayout
+	             //Création d'un togglebutton pour chaque salle
+	             ToggleButton toggle = new ToggleButton(this);
+	             toggle.setMinimumWidth(0);
+	             toggle.setWidth(150);
+	             toggle.setHeight(90);
+	             
+	             if(statut.equals("0"))
+	             {
+	            	 toggle.setText("Libre");
+	             }
+	             else
+	             {
+	            	 toggle.setChecked(true);
+	            	 toggle.setText("Occupée");
+	             }
+	             toggle.setTextOn("Occupée");
+	             toggle.setTextOff("Libre");
+	             toggle.setId(i+1);
+	             toggle.setOnCheckedChangeListener(this);   
+	             
+	             //Left, top, right, bottom
+	
+	     	    contentRow.setPadding(10,10,10,10);
+	
+	     	    contentRow.addView(toggle);
+	     	    contentRow.setGravity(Gravity.RIGHT);
+	     	    
+	     	   TableLayout contentTableLayout = new TableLayout(this);
+	     	   contentTableLayout.addView(contentRow);
+	
+	     	    ll.addView(contentTableLayout);
+	     }
 	}
 		catch (JSONException e)
 		{

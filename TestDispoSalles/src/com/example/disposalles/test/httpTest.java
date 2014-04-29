@@ -10,21 +10,21 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.example.disposalles.Salles;
+import com.example.disposalles.Salle;
 import com.example.disposalles.ConnexionAsyncTask;
 
 import android.content.Intent;
 import android.test.ActivityUnitTestCase;
 import android.util.Log;
 
-public class httpTest extends ActivityUnitTestCase<Salles> {
+public class httpTest extends ActivityUnitTestCase<Salle> {
 
-	  public httpTest(Class<Salles> activityClass)
+	  public httpTest(Class<Salle> activityClass)
 	  {
 		super(activityClass);
 	  }
 
-	private Salles activity;
+	private Salle activity;
     private InputStream is;
 
 

@@ -24,6 +24,7 @@ public class ConnexionAsyncTask extends AsyncTask <String, String, Void>
     String identifiant = "";
     boolean statut;
     public static String reponse="";
+
     SalleActivity activity;
     
 	protected Void doInBackground(String... params)
